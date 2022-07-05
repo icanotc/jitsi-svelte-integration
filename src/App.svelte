@@ -1,20 +1,23 @@
 <script>
 
     import {onMount} from "svelte"
-    import JitsiMeetJS from "@solyd/lib-jitsi-meet"
+    import "../src/lib/vender/lib-jitsi-meet.min.js"
 
 
     onMount(() => {
         console.log(JitsiMeetJS)
-        JitsiMeetJS.init()
-
-        const options = {
+        const DEFAULT_JITSI_CONFIG = {
             hosts: {
-                domain: '127.0.0.1',
-                muc: '127.0.0.1:10000'
+                domain: 'meet.jit.si',
+                muc: 'conference.meet.jit.si',
+                focus: 'focus.meet.jit.si',
             },
-            bosh: '//127.0.0.1:51941/http-bind'
-        };
+            externalConnectUrl: 'https://meet.jit.si/http-pre-bind',
+            useStunTurn: true,
+            bosh: `https://meet.jit.si/http-bind`, // need to add `room=[ROOM]` when joining
+            websocket: 'wss://meet.jit.si/xmpp-websocket',
+            clientNode: 'http://jitsi.org/jitsimeet',
+        }
 
         const confOptions = {
 
@@ -23,7 +26,7 @@
 
         JitsiMeetJS.init(confOptions)
 
-        let connection = new JitsiMeetJS.JitsiConnection(null, null, options);
+        let connection = new JitsiMeetJS.JitsiConnection(null, null, DEFAULT_JITSI_CONFIG);
 
         connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, onConnectionSuccess);
         connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED, onConnectionFailed);
