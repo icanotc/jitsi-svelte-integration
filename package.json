@@ -1,0 +1,30 @@
+{
+	"name": "jitsi-svelte-integration",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "svelte-kit build",
+		"package": "svelte-kit package",
+		"preview": "svelte-kit preview",
+		"prepare": "svelte-kit sync",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/kit": "next",
+		"@types/cookie": "^0.5.1",
+		"autoprefixer": "^10.4.7",
+		"postcss": "^8.4.14",
+		"svelte": "^3.46.0",
+		"svelte-check": "^2.7.1",
+		"svelte-preprocess": "^4.10.7",
+		"tailwindcss": "^3.1.4",
+		"tslib": "^2.3.1",
+		"typescript": "^4.7.2"
+	},
+	"type": "module",
+	"dependencies": {
+		"lib-jitsi-meet": "https://github.com/jitsi/lib-jitsi-meet/releases/download/v1461.0.0+96664436/lib-jitsi-meet.tgz"
+	}
+}
