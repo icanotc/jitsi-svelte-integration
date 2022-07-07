@@ -1,6 +1,6 @@
 <script>
 import {OverlayOn} from './stores/OverlayStore.js'   // One dot is same folder
-import Overlay from '../components/Overlay.svelte' // two dots for diff folder
+import Overlay from './components/Overlay.svelte'
 import './main.css'
 
 let Mute_Unmute = true
@@ -104,9 +104,11 @@ let Mute_Unmute = true
 
 
     {#if $OverlayOn}
+        <img src="/ceo.webp"/>
         <Overlay>
-            <p> test </p>
-        </Overlay>      
+            
+        </Overlay> 
+
     {/if}
 
  
