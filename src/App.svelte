@@ -16,6 +16,15 @@ let Mute_Unmute = true
         alert("placeHolder openChat")
     }
 
+    const fileInput = document.getElementById('BtnBrowseHidden');
+    alert(fileInput);
+    $: console.log(fileInput);
+    // fileInput.onchange = () => 
+    // {
+    //     const selectedFile = fileInput.files[0];
+    //     console.log(selectedFile);
+    // }
+
 </script>
 
 
@@ -77,7 +86,7 @@ let Mute_Unmute = true
 
     <!-- Upload prez -->
     <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded w-14">
-        <input type="file" id="BtnBrowseHidden" name="files" style="display: none;"/>
+        <input type="file" id="BtnBrowseHidden" name="files" style="display: none; bind:fileInput"/>
         <label for="BtnBrowseHidden" id="LblBrowse">            
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
