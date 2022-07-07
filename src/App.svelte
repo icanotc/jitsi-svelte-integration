@@ -20,9 +20,10 @@ let video = true
     </ControlBar>
 
     {#if $overlayEnabled}
-         <img src="/ceo.webp" alt="branav moment"/>
+         <!-- <img src="/ceo.webp" alt="branav moment"/> don't turn on breaks everything-->
+        
         <Overlay url={$imgURL} hidden={false}>
-            
+                    
         </Overlay> 
 
     {/if}
