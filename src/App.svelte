@@ -2,6 +2,7 @@
 import {OverlayOn} from './stores/OverlayStore.js'   // One dot is same folder
 import Overlay from './components/Overlay.svelte'
 import './main.css'
+import {bgImg} from './stores/OverlayStore.js' 
 
 let Mute_Unmute = true
     let video = true
@@ -15,14 +16,17 @@ let Mute_Unmute = true
     {
         alert("placeHolder openChat")
     }
-
+    console.log(bgImg);
     let fileInput;
-    $: console.log(fileInput);
-    // fileInput.onchange = () => 
-    // {
-    //     const selectedFile = fileInput.files[0];
-    //     console.log(selectedFile);
-    // }
+    $: 
+    {
+        console.log(fileInput);
+        bgImg.set(fileInput);
+        console.log(bgImg);
+    }
+
+
+    
 
 </script>
 
@@ -112,7 +116,7 @@ let Mute_Unmute = true
 
 
     {#if $OverlayOn}
-        <img src="/ceo.webp"/>
+        <!-- <img src="/ceo.webp"/> -->
         <Overlay>
             
         </Overlay> 
