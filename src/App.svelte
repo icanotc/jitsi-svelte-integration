@@ -1,4 +1,7 @@
 <script>
+import {OverlayOn} from './stores/OverlayStore.js'   // One dot is same folder
+import Overlay from '../components/Overlay.svelte' // two dots for diff folder
+import './main.css'
 
 let Mute_Unmute = true
     let video = true
@@ -75,7 +78,7 @@ let Mute_Unmute = true
     <!-- Upload prez -->
     <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded w-14">
         <input type="file" id="BtnBrowseHidden" name="files" style="display: none;"/>
-        <label for="BtnBrowseHidden" id="LblBrowse">
+        <label for="BtnBrowseHidden" id="LblBrowse">            
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
@@ -91,14 +94,28 @@ let Mute_Unmute = true
         
     </button>
     
+    <!-- Placeholder toggle overlay -->
+    <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" on:click={() => {OverlayOn.set(true)}}>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+    </button>
+
+
+    {#if $OverlayOn}
+        <Overlay>
+            <p> test </p>
+        </Overlay>      
+    {/if}
+
  
     </div>
 
 </main>
 
-
-<style global>
-    @tailwind utilities;
-    @tailwind components;
-    @tailwind base;
+<style>
+@tailwind utilities;
+@tailwind components;
+@tailwind base;
 </style>
