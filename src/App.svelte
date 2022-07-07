@@ -12,11 +12,7 @@
 
 </script>
 
-{#await new Promise(res => {setTimeout(async () => { res()}, 2000)})}
 
-{:then bruh}
-    <Video></Video>
-{/await}
 
 <main class="container m-auto flex justify-center items-center">
 
@@ -83,3 +79,4 @@
     @tailwind components;
     @tailwind base;
 </style>
+
