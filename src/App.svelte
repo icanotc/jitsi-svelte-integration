@@ -7,6 +7,14 @@ let Mute_Unmute = true
 let video = true
 
 
+    import {onMount} from "svelte"
+    import {InitJitsi} from "./lib/js/InitJitsi.js";
+    import Video from "./lib/components/Video.svelte";
+    
+    onMount(() => {
+        //InitJitsi()
+    })
+
 </script>
 
 
@@ -28,13 +36,10 @@ let video = true
 
     {/if}
 
- 
-    </div>
 
-</main>
-
-<style>
-@tailwind utilities;
-@tailwind components;
-@tailwind base;
+<style global>
+    @tailwind utilities;
+    @tailwind components;
+    @tailwind base;
 </style>
+
