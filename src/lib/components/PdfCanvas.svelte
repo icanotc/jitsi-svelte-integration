@@ -4,41 +4,75 @@ import viewer from "@bundled-es-modules/pdfjs-dist/web/pdf_viewer";
 
 pdfjs.GlobalWorkerOptions.workerSrc =
   "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/build/pdf.worker.min.js";
-var url = "./public/test.pdf";
+var url = "./public/sample.pdf";
 var loadingTask = pdfjs.getDocument(url);
-loadingTask.promise.then(function(pdf) {
-  console.log('PDF loaded');
-  
-  // Fetch the first page
-  var pageNumber = 1;
-  pdf.getPage(pageNumber).then(function(page) {
-    console.log('Page loaded');
-    
-    var scale = 1.5;
-    var viewport = page.getViewport({scale: scale});
+let pageNumber = 1;
 
-    // Prepare canvas using PDF page dimensions
-    var canvas = document.getElementById('the-canvas');
-    var context = canvas.getContext('2d');
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
+loadPage(pageNumber);
 
-    // Render PDF page into canvas context
-    var renderContext = {
-      canvasContext: context,
-      viewport: viewport
-    };
-    var renderTask = page.render(renderContext);
-    renderTask.promise.then(function () {
-      console.log('Page rendered');
-    });
-  });
-}, function (reason) {
-  // PDF loading error
-  console.error(reason);
-});
+function leftPage(){
+    pageNumber--;
+    loadPage(pageNumber);
+}
+
+function rightPage(){
+    pageNumber++;
+    loadPage(pageNumber);
+}
+
+function loadPage(page){
+    loadingTask.promise.then(function(pdf) {
+        console.log('PDF loaded');
+        
+        // Fetch the first page
+        pdf.getPage(page).then(function(page) {
+            console.log('Page loaded');
+            
+            var scale = 1.5;
+            var viewport = page.getViewport({scale: scale});
+
+            // Prepare canvas using PDF page dimensions
+            var canvas = document.getElementById('the-canvas');
+            var context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            var renderContext = {
+            canvasContext: context,
+            viewport: viewport
+            };
+            var renderTask = page.render(renderContext);
+            renderTask.promise.then(function () {
+            console.log('Page rendered');
+            });
+        });
+        }, function (reason) {
+        // PDF loading error
+        console.error(reason);
+        });
+}
+
 </script>
 
 <div>
     <canvas id="the-canvas"></canvas>
 </div>
+
+<!-- Page Left -->
+<h1>{pageNumber}</h1>
+<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+	     on:click={leftPage}>
+		<path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+	</svg>
+
+</button>
+
+<!-- Page Right -->
+<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+	     on:click={rightPage}>
+		<path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+	</svg>
+</button>
