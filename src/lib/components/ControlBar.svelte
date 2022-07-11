@@ -1,5 +1,5 @@
 <script>
-	import { imgURL, overlayEnabled } from "../stores/Overlay.js";
+	import { imgURL, overlayEnabled } from "../stores/Overlay";
 
 	export let Mute_Unmute, video
 

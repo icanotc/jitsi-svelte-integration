@@ -1,15 +1,12 @@
 <script>
 import './main.css'
-import { overlayEnabled, imgURL } from "./stores/Overlay.js";
-import Overlay from "./components/Overlay.svelte";
-import ControlBar from "./components/ControlBar.svelte";
-let Mute_Unmute = true
-let video = true
+import { overlayEnabled, imgURL } from "./lib/stores/Overlay";
+import Overlay from "./lib/components/Overlay.svelte";
+import ControlBar from "./lib/components/ControlBar.svelte";
 
-
-    import {onMount} from "svelte"
-    import {InitJitsi} from "./lib/js/InitJitsi.js";
-    import Video from "./lib/components/Video.svelte";
+import {onMount} from "svelte"
+import {InitJitsi} from "./lib/js/InitJitsi";
+import Video from "./lib/components/Video.svelte";
     
     onMount(() => {
         //InitJitsi()
@@ -36,6 +33,8 @@ let video = true
 
     {/if}
 
+    </div>
+</main>
 
 <style global>
     @tailwind utilities;

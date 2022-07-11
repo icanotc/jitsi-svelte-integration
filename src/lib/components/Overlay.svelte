@@ -1,5 +1,5 @@
 <script>
-    import { overlayEnabled } from "/src/stores/Overlay.js"
+    import { overlayEnabled } from "../stores/Overlay"
     export let url, hidden
 
 
