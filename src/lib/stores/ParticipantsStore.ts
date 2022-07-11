@@ -31,9 +31,12 @@ function createSingleParticipantStore(){
 	//this stores the current audio level of the participant (one participant could only have 1 audio track)
 	const audioLevelStore = writable(0.0);
 
-	const mainStore = derived([statusStore, tracksStore, audioLevelStore], ([$status, track, audioLevel], set) => {
+	const mainStore = derived([statusStore, tracksStore, audioLevelStore], ([$status, $track, $audioLevel], set) => {
 		set({
-			tracks: 
+			status: $status,
+			tracks: $track,
+
+
 		})
 	})
 }
