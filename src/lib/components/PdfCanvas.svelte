@@ -7,17 +7,35 @@ pdfjs.GlobalWorkerOptions.workerSrc =
 var url = "./public/sample.pdf";
 var loadingTask = pdfjs.getDocument(url);
 let pageNumber = 1;
+let totalPages;
+
+//determines the number of pages in the pdf 
+loadingTask.promise.then(function (doc) {
+    totalPages = doc.numPages;
+    console.log('# Document Loaded');
+});
+
 
 loadPage(pageNumber);
 
+//loads previous page
 function leftPage(){
-    pageNumber--;
-    loadPage(pageNumber);
+
+    if(pageNumber != 1){
+        pageNumber--;
+        loadPage(pageNumber);
+    }
+    
 }
 
+//loads next page
 function rightPage(){
-    pageNumber++;
-    loadPage(pageNumber);
+
+    if(pageNumber != totalPages){
+        pageNumber++;
+        loadPage(pageNumber);
+    }
+    
 }
 
 function pdfUpload(url){
@@ -33,6 +51,7 @@ function pdfUpload(url){
     
 }
 
+//loads page onto canvas 
 function loadPage(page){
     loadingTask.promise.then(function(pdf) {
         console.log('PDF loaded');
@@ -68,27 +87,7 @@ function loadPage(page){
 
 </script>
 
-<div>
-    <canvas id="the-canvas"></canvas>
-</div>
-
-<!-- Page Left -->
 <h1>{pageNumber}</h1>
-<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-	     on:click={leftPage}>
-		<path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-	</svg>
-
-</button>
-
-<!-- Page Right -->
-<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-	     on:click={rightPage}>
-		<path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-	</svg>
-</button>
 
 <!-- Upload Pdf -->
 <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded w-14">
@@ -102,3 +101,27 @@ function loadPage(page){
 		</svg>
 	</label>
 </button>
+
+<!-- page left -->
+<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded w-14">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+         width="16" height="16" viewBox="0 0 199.404 199.404" xml:space="preserve" fill="white" on:click={leftPage}>
+        <g>
+            <polygon points="199.404,81.529 74.742,81.529 127.987,28.285 99.701,0 0,99.702 99.701,199.404 127.987,171.119 74.742,117.876 
+            199.404,117.876 "/>
+        </g>
+    </svg>
+</button>
+
+<!-- page right -->
+<button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded w-14">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="16" height="16" viewBox="0 0 199.404 199.404" xml:space="preserve" fill="white" on:click={rightPage}>
+    <g>
+        <polygon points="99.703,199.405 199.405,99.702 99.703,0 71.418,28.285 124.662,81.529 0,81.529 0,117.876 124.662,117.876 
+        71.418,171.12 "/>
+    </g>
+    </svg>
+</button>
+
+<canvas id="the-canvas"></canvas>
