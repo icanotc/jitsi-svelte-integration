@@ -25,6 +25,7 @@ function pdfUpload(url){
     let reader = new FileReader();
     reader.readAsDataURL(pdf);
     reader.onload = e => {
+        pageNumber = 1;
         url = e.target.result;
         loadingTask = pdfjs.getDocument(url);
         loadPage(pageNumber);
