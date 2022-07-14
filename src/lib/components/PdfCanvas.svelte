@@ -46,6 +46,9 @@ function pdfUpload(url){
         pageNumber = 1;
         url = e.target.result;
         loadingTask = pdfjs.getDocument(url);
+        loadingTask.promise.then(
+            (doc) => totalPages=doc.numPages
+        );
         loadPage(pageNumber);
     };
     
@@ -54,11 +57,9 @@ function pdfUpload(url){
 //loads page onto canvas 
 function loadPage(page){
     loadingTask.promise.then(function(pdf) {
-        console.log('PDF loaded');
         
         // Fetch the first page
         pdf.getPage(page).then(function(page) {
-            console.log('Page loaded');
             
             var scale = 1.5;
             var viewport = page.getViewport({scale: scale});
@@ -76,7 +77,6 @@ function loadPage(page){
             };
             var renderTask = page.render(renderContext);
             renderTask.promise.then(function () {
-            console.log('Page rendered');
             });
         });
         }, function (reason) {
