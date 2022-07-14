@@ -3,6 +3,7 @@ export const remoteTracks = {};
 export let connection = null;
 export let isJoined: boolean = false;
 export let room = null;
+import JitsiMeetJS from 'lib-jitsi-meet';
 
 enum ConferenceState {
 	INITIAL,
@@ -26,20 +27,17 @@ export function InitJitsi() {
 
 	const DEFAULT_JITSI_CONFIG = {
 		hosts: {
-			domain: 'meet.jit.si',
-			muc: 'conference.meet.jit.si',
-			focus: 'focus.meet.jit.si',
+			domain: 'meet.jitsi',
+			muc: 'muc.meet.jitsi',
 		},
-		externalConnectUrl: 'https://meet.jit.si/http-pre-bind',
-		useStunTurn: true,
-		bosh: `https://meet.jit.si/http-bind`, // need to add `room=[ROOM]` when joining
-		websocket: 'wss://meet.jit.si/xmpp-websocket',
-		clientNode: 'http://jitsi.org/jitsimeet',
-	}
 
+		serviceUrl: 'wss://localhost:8443/xmpp-websocket',
+
+	}
 	JitsiMeetJS.init(confOptions)
 
-	let connection = new JitsiMeetJS.JitsiConnection(null, null, DEFAULT_JITSI_CONFIG);
+	//public variable thats already defined, just inits here
+	connection = new JitsiMeetJS.JitsiConnection(null, null, DEFAULT_JITSI_CONFIG);
 
 	connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, onConnectionSuccess);
 	connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_FAILED, onConnectionFailed);

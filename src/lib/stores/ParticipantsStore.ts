@@ -15,7 +15,7 @@ interface ParticipantsStore{
 }
 
 
-function createSingleParticipantStore(){
+function createSingleParticipantStore(): ParticipantsStore{
 	const statusStore = writable({
 		id: '',
 
@@ -35,8 +35,17 @@ function createSingleParticipantStore(){
 		set({
 			status: $status,
 			tracks: $track,
-
+			audioLevel: $audioLevel,
 
 		})
 	})
+
+	const events = {
+		audio: {
+
+		},
+		video: {
+
+		}
+	}
 }

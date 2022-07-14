@@ -7,9 +7,10 @@ import ControlBar from "./lib/components/ControlBar.svelte";
 import {onMount} from "svelte"
 import {InitJitsi} from "./lib/js/InitJitsi";
 import Video from "./lib/components/Video.svelte";
-    
+
+
     onMount(() => {
-        //InitJitsi()
+        InitJitsi()
     })
 
 </script>
@@ -18,7 +19,8 @@ import Video from "./lib/components/Video.svelte";
 
 <main>
     <div class="">
-        
+
+<!--        <iframe src="/mirror%20mirror%20official%20testing%20slides.pdf" width="400" height="400"    frameborder="0"></iframe>-->
 
     <ControlBar Mute_Unmute=false, video=false>
 
@@ -40,5 +42,13 @@ import Video from "./lib/components/Video.svelte";
     @tailwind utilities;
     @tailwind components;
     @tailwind base;
+    body {
+        overflow-y: hidden; /* Hide vertical scrollbar */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+    }
+
+     iframe::-webkit-scrollbar {
+         display: none;
+     }
 </style>
 
