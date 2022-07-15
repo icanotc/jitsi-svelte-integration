@@ -31,7 +31,7 @@ function createSingleParticipantStore(): ParticipantsStore{
 	//this stores the current audio level of the participant (one participant could only have 1 audio track)
 	const audioLevelStore = writable(0.0);
 
-	const mainStore = derived([statusStore, tracksStore, audioLevelStore], ([$status, $track, $audioLevel], set) => {
+	const participantStore = derived([statusStore, tracksStore, audioLevelStore], ([$status, $track, $audioLevel], set) => {
 		set({
 			status: $status,
 			tracks: $track,
@@ -42,7 +42,14 @@ function createSingleParticipantStore(): ParticipantsStore{
 
 	const events = {
 		audio: {
+			track: {
+				TRACK_AUDIO_LEVEL_CHANGED: (audiolevel) => {
+					audioLevelStore.set(audiolevel);
+				},
+				TRACK_MUTE_CHANGED: () => {
 
+				}
+			}
 		},
 		video: {
 

@@ -18,3 +18,11 @@ export function addEventListeners(connection: JitsiConnection, events: any): voi
 		}
 	}
 }
+
+export function removeEventListeners(connection: JitsiConnection, events: any): void {
+	for (const eventType in Object.keys(events)) {
+		for (const [eventName, callback] of Object.entries(events[eventType])) {
+			connection.removeEventListener(JitsiMeetJS[eventType][eventName], callback);
+		}
+	}
+}
