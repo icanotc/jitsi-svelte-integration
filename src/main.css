@@ -1,3 +1,53 @@
 @tailwind utilities;
 @tailwind components;
 @tailwind base;
+
+/*body {
+background-image: url("{% static 'img/stock1.jpg' %}");
+opacity: 70%;
+
+}*/
+
+iframe{
+    position:relative;
+    z-index: 1;
+    size: 100px;
+
+
+}
+.item {
+background-image: url("{% static 'img/stock1.jpg' %}");
+background-color: red;
+opacity: 50%;
+position: absolute;
+display:block;
+z-index: 11;
+}
+.resizer{
+position: absolute;
+width: 10px;
+height: 10px;
+border-radius:  5px;
+background-color: blueviolet;
+z-index: 12;
+}
+.resizer.nw {
+top: -1px;
+left: -1px;
+cursor: nw-resize;
+}
+.resizer.ne {
+top: -1px;
+right: -1px;
+cursor: ne-resize;
+}
+.resizer.sw {
+bottom: -1px;
+left: -1px;
+cursor: sw-resize;
+}
+.resizer.se {
+bottom: -1px;
+right: -1px;
+cursor: se-resize;
+}

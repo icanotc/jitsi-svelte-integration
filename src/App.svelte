@@ -1,5 +1,6 @@
 <script>
 import './main.css'
+import './resize.ts'
 import { overlayEnabled, imgURL } from "./stores/Overlay.js";
 import Overlay from "./components/Overlay.svelte";
 import ControlBar from "./components/ControlBar.svelte";
@@ -8,10 +9,23 @@ let video = true
 
 
 </script>
+<link rel="stylesheet" href = "main.css" />
 
-
-
+<p> test</p>
 <main>
+    <div style=" width: 500px; height: 500px;" class="item">
+        <div class="resizer ne"></div>
+        <div class="resizer nw"></div>
+        <div class="resizer se"></div>
+        <div class="resizer sw"></div>
+        </div>
+    
+    
+    
+    
+        <script  src="./resize.ts">
+
+        </script>
     <div class="">
         
 
