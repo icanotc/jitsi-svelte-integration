@@ -1,4 +1,4 @@
-import {writable, get} from 'svelte/store'
+import { writable, get, derived } from "svelte/store";
 
 import type JitsiTrack from "../JitsiTypes/modules/RTC/JitsiTrack";
 //this function is responsible for creating a new element that contains a track
@@ -9,6 +9,7 @@ import type JitsiTrack from "../JitsiTypes/modules/RTC/JitsiTrack";
 
 //USAGE: get the element store out of this thing and then bind it into the component
 function createElementAndTrackStore() {
+	//its either jitsi track or null
 	let attachedTrack: JitsiTrack | null = null;
 
 	//these 2 stores are what contains the data for the element (the thing you see)
@@ -41,4 +42,36 @@ function createElementAndTrackStore() {
 		}
 	}
 
+	//this is the main track tha contains both the element and the track
+	const ElementTrackStore = derived([elementStore, trackStore], ([$element, $track], set) => {
+		set({
+			element: $element,
+			track: $track,
+		})
+	})
+
+	//the subscribe function returns an unsubscribe function
+	const unsubscribe = ElementTrackStore.subscribe((($props) => {
+		//if the element is there, attach the track
+		if ($props.element && $props.track) {
+			attach()
+		}
+	}))
+
+	return {
+		subscribe: ElementTrackStore.subscribe,
+		destroy: () => {
+			unsubscribe()
+			detach()
+		},
+		setElement: (element) => {
+			elementStore.set(element)
+		},
+		setTrack: (track) => {
+			//only set the track if its a different track
+			if (track !== get(trackStore)) {
+				trackStore.set(track)
+			}
+		},
+	}
 }
