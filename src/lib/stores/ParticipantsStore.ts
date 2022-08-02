@@ -1,6 +1,7 @@
 import { derived, get, Readable, Writable, writable } from "svelte/store";
 import type JitsiTrack from "../JitsiTypes/modules/RTC/JitsiTrack";
-import { addEventListeners } from "../Utils/Utils";
+import { addEventListeners, removeEventListeners } from "../Utils/Utils";
+import type JitsiLocalTrack from "../JitsiTypes/modules/RTC/JitsiLocalTrack";
 
 export interface ParticipantsStore{
 	store: Readable<any>;
@@ -21,15 +22,15 @@ export interface Events {
 	//TODO: more concrete types
 }
 
-export function createSingleParticipantStore(): any{
+export function createSingleParticipantStore(islocal: boolean): any{
 	const statusStore = writable({
-		id: '',
+		JitsiID: '',
 
 		videoEnabled: true,
 		audioEnabled: true,
 		displayName: '',
 
-		isLocal: false,
+		isLocal: islocal,
 	})
 	//this stores all the tracks for this participant
 	const tracksStore: Writable<Events> = writable();
@@ -103,13 +104,70 @@ export function createSingleParticipantStore(): any{
 				}
 			}
 		},
-		addTrack: (track: JitsiTrack) => {
+		addTrack: (track: JitsiLocalTrack) => {
 			if (track){
 				const trackType = track.getType()
 				if (events[trackType]){
 					addEventListeners(track, events[trackType]);
 				}
+				statusStore.update((allFields) => ({
+					...allFields,
+					//videoEnabled, audioEnabled etc
+					[`${trackType}Enabled`]: !track.isMuted(),
+				}))
+				tracksStore.update((allFields) => ({
+					...allFields,
+					//audio, video etc
+					[trackType]: track,
+				}))
 			}
+		},
+		removeTrack: (track: JitsiTrack) => {
+			if (track){
+				const trackType = track.getType()
+				if (events[trackType]){
+					removeEventListeners(track, events[trackType]);
+				}
+
+				tracksStore.update((allFields) => ({
+					...allFields,
+					//audio, video etc
+					[trackType]: undefined,
+				}))
+			}
+		},
+		statusStore: {subscribe: statusStore.subscribe},
+		tracksStore: {subscribe: tracksStore.subscribe},
+		audioLevelStore: {subscribe: audioLevelStore.subscribe},
+	}
+}
+
+export function createParticipantsStore() {
+	const store = writable({});
+
+	const {subscribe, update, set} = store;
+	//this allows us to change the participant with the ID
+	const updateParticipant = (id: string, updateFunc: (participant: any) => any) => {
+		let participant = get(store)[id];
+		if (participant){
+			updateFunc(participant)
+		}else{
+			store.update(($allFields) => {
+				if (!$allFields[id]){
+					console.warn(`Participant ${id} should not exist`);
+				}
+				participant = createParticipantsStore()
+				updateFunc(participant)
+
+				return {
+					...$allFields,
+					[id]: participant,
+				}
+			})
+
 		}
+	}
+	return {
+		subscribe, update, updateParticipant, set
 	}
 }
