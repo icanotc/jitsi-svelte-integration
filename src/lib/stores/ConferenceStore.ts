@@ -74,9 +74,8 @@ function createConferenceStore(conferenceId, connectionStore) {
 			const removeTrack = (track: JitsiRemoteTrack) => {
 				let pID = track.getParticipantId()
 
-				if (!pID) {
-					pID = cachedTrackPartcipants.get(track)
-				}
+				if (!pID) pID = cachedTrackPartcipants.get(track)
+
 				if (pID) {
 					cachedTrackPartcipants.set(track, pID)
 					remoteParticipantsStore.updateParticipant(pID, (pStore) => {
@@ -86,65 +85,52 @@ function createConferenceStore(conferenceId, connectionStore) {
 					console.warn(`Track ${track} has no participant ID`)
 				}
 			}
+			
+			const events = { conference: {}}
 
-			const events = {
-				conference: {
+			events.conference = {
+				//Events that affect the participant's status in the conference
 
-					//Events that affect the participant's status in the conference
-
-
-					CONFERENCE_JOINED: () => setStatus(ConferenceState.JOINED),
-					CONFERENCE_LEFT: () => {
-						removeEventListeners( conference, events)
-						setStatus(ConferenceState.LEFT)
-					},
-					CONFERENCE_FAILED: () => setStatus(ConferenceState.FAILED),
-					CONFERENCE_ERROR: (errorCode) => {
-						console.error('Jitsi conference error', errorCode)
-						setStatus(ConferenceState.ERROR)
-					},
-					KICKED: () => setStatus(ConferenceState.KICKED),
-
-
+				CONFERENCE_JOINED: () => setStatus(ConferenceState.JOINED),
+				CONFERENCE_LEFT: () => {
+					removeEventListeners( conference, events)
+					setStatus(ConferenceState.LEFT)
+				},
+				CONFERENCE_FAILED: () => setStatus(ConferenceState.FAILED),
+				CONFERENCE_ERROR: (errorCode) => {
+					console.error('Jitsi conference error', errorCode)
+					setStatus(ConferenceState.ERROR)
+				},
+				KICKED: () => setStatus(ConferenceState.KICKED),
 					//Events that can be used to update participant's metadata
 
-					USER_JOINED: (pId, participant) => {
-						remoteParticipantsStore.updateParticipant(pId, (pStore) => {
-							pStore.updateFieldsFromJitsiParticipant(participant)
-						})
-					},
-					USER_LEFT: (pId) => {
-						remoteParticipantsStore.update((($participants) => {
-							return {
-								...$participants,
-								[pId]: undefined
-							}
-						}))
-					},
-					USER_ROLE_CHANGED: (pId, role) => {
-						if (pId === localParticipantID) {
-							localParticipantStore.setRole(role)
-						} else {
-							remoteParticipantsStore.updateParticipant(pId, (pStore) => {
-								pStore.setRole(role)
-							})
-						}
-					},
-
-					/**
-					 * "Track" events: we get notified whenever a remote participant adds an
-					 * audio or video track to the conference, and we can then attach it to
-					 * the local representation of the corresponding participant.
-					 */
-
-					TRACK_ADDED: (track) => {
-						addTrack(track)
-					},
-					TRACK_REMOVED: (track) => {
-						removeTrack(track)
-					},
+				USER_JOINED: (pId, participant) => {
+					remoteParticipantsStore.updateParticipant(pId, (pStore) => {
+						pStore.updateFieldsFromJitsiParticipant(participant)
+					})
 				},
+				USER_LEFT: (pId) => {
+					remoteParticipantsStore.update((($participants) => {
+						return {
+							...$participants,
+							[pId]: undefined
+						}
+					}))
+				},
+				USER_ROLE_CHANGED: (pId, role) => {
+					if (pId === localParticipantID) {
+						localParticipantStore.setRole(role)
+					} else {
+						remoteParticipantsStore.updateParticipant(pId, (pStore) => {
+							pStore.setRole(role)
+						})
+					}
+				},
+
+				TRACK_ADDED: (track) => addTrack(track),
+				TRACK_REMOVED: (track) => removeTrack(track),
 			}
+
 			//add all the event listeners
 			addEventListeners(conference, events)
 
@@ -204,7 +190,11 @@ function createConferenceStore(conferenceId, connectionStore) {
 	)
 
 	return {
-		
+		subscribe: store.subscribe,
+		state: conferenceStateStore,
+		localParticipant: localParticipantStore,
+		participants: allParticipantsStore,
+		permitEntry: (permit) => permitEntryStore.set(permit),
 	}
 }
 
