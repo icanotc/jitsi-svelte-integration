@@ -183,8 +183,28 @@ function createConferenceStore(conferenceId, connectionStore) {
 		null
 	)
 
-	return {
+	const allParticipantsStore = derived(
+		[localParticipantStore, remoteParticipantsStore, store],
+		([$localParticipant, $remoteParticipants, $store], set) => {
+			if(!$store) {
+				set({}) //if conference store is null then we assume it has no participant
+				return
+			}
 
+			const participants = {}
+
+			for (const [id, store] of Object.entries($remoteParticipants)) {
+				participants[id] = store
+			}
+
+			set(participants)
+
+		},
+		{}
+	)
+
+	return {
+		
 	}
 }
 
@@ -193,11 +213,8 @@ function createConferecesStore(connectionStore){
 
 	const join = (conferenceID) => {
 		store.update(($store) => {
-			return {
-				...$store,
-				[conferenceID]: createConferenceStore(
-					conferenceID, connectionStore
-				),
+			return {...$store,
+				[conferenceID]: createConferenceStore(conferenceID, connectionStore)
 			}
 		})
 	}
