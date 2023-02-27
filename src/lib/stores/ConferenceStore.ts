@@ -55,37 +55,36 @@ function createConferenceStore(conferenceId, connectionStore) {
 				}
 			}
 
-			const addTrack = (track: JitsiRemoteTrack) => {
+			const addTrack = (track: JitsiRemoteTrack): void => {
 				let pID = track.getParticipantId()
+				if (!pID) pID = cachedTrackPartcipants.get(track)
 
 				if (!pID) {
-					pID = cachedTrackPartcipants.get(track)
-				}
-				if (pID) {
-					cachedTrackPartcipants.set(track, pID)
-					remoteParticipantsStore.updateParticipant(pID, (pStore) => {
-						pStore.addTrack(track)
-					})
-				}else{
 					console.warn(`Track ${track} has no participant ID`)
+					return
 				}
+
+				cachedTrackPartcipants.set(track, pID)
+				remoteParticipantsStore.updateParticipant(pID, (pStore) => {
+					pStore.addTrack(track)
+				})
 			}
 
-			const removeTrack = (track: JitsiRemoteTrack) => {
+			const removeTrack = (track: JitsiRemoteTrack): void => {
 				let pID = track.getParticipantId()
 
 				if (!pID) pID = cachedTrackPartcipants.get(track)
-
-				if (pID) {
-					cachedTrackPartcipants.set(track, pID)
-					remoteParticipantsStore.updateParticipant(pID, (pStore) => {
-						pStore.removeTrack(track)
-					})
-				}else{
+				if(!pID) {
 					console.warn(`Track ${track} has no participant ID`)
+					return
 				}
+
+				cachedTrackPartcipants.set(track, pID)
+				remoteParticipantsStore.updateParticipant(pID, (pStore) => {
+					pStore.removeTrack(track)
+				})
 			}
-			
+
 			const events = { conference: {}}
 
 			events.conference = {
@@ -197,7 +196,7 @@ function createConferenceStore(conferenceId, connectionStore) {
 		permitEntry: (permit) => permitEntryStore.set(permit),
 	}
 }
-
+//this sets up a store with multiple conferences
 function createConferecesStore(connectionStore){
 	const store = writable({})
 
