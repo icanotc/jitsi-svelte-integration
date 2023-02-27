@@ -1,4 +1,4 @@
-import { derived, writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
 import { createParticipantsStore, createSingleParticipantStore } from "./ParticipantsStore";
 import type JitsiConnection from "../JitsiTypes/JitsiConnection";
 import type JitsiTrack from "../JitsiTypes/modules/RTC/JitsiTrack";
@@ -20,7 +20,7 @@ export enum ConferenceState {
 function createConferenceStore(conferenceId, connectionStore) {
 
 
-	const newConferenceStateStore = writable(ConferenceState.INITIAL);
+	const conferenceStateStore = writable(ConferenceState.INITIAL);
 	//this store determines if someone has the perms to join a meeting
 	const permitEntryStore = writable(false);
 
@@ -116,7 +116,10 @@ function createConferenceStore(conferenceId, connectionStore) {
 						},
 						USER_LEFT: (pId) => {
 							remoteParticipantsStore.update((($participants) => {
-								return omit($participants, [pId])
+								return {
+									...$participants,
+									[pId]: undefined
+								}
 							}))
 						},
 						USER_ROLE_CHANGED: (pId, role) => {
@@ -143,14 +146,51 @@ function createConferenceStore(conferenceId, connectionStore) {
 						},
 					},
 				}
+				//add all the event listeners
+				addEventListeners(conference, events)
+
+				setStatus(ConferenceState.JOINING)
+				conference.join()
+
+				return () => {
+					const state = get(conferenceStateStore)
+
+					if (state === ConferenceState.JOINED || state === ConferenceState.JOINING) {
+						const connection = get(connectionStore)
+
+						if (connection) {
+							// if connection is null
+							setStatus(ConferenceState.LEAVING)
+							conference.leave().then(() => {
+								console.log("OMG WE LEFT THE CONFERENCE", conferenceId)
+								//alright this will set to ConferenceState.LEFT with the callback
+							}).catch((err) => {
+								setStatus(ConferenceState.LEFT)
+								console.warn("OMG WE FAILED TO LEAVE THE CONFERENCE", conferenceId, err)
+							})
+						}else{
+							//cleaning up even if connection is null
+							setStatus(ConferenceState.LEFT)
+							removeEventListeners(conference, events)
+						}
+
+					}else{
+						//cleaning up even if state is not JOINED or JOINING
+						setStatus(ConferenceState.LEFT)
+						removeEventListeners(conference, events)
+					}
+				}
+
 			}
 
-			//add all the event listeners
-			addEventListeners(conference, events)
-
-		}
+		},
+		//initial value
+		null
 	)
 
+	derived(
+
+	)
 }
 
 function createConferecesStore()

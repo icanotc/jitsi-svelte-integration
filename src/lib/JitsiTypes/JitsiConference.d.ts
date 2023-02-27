@@ -25,7 +25,7 @@ export default class JitsiConference {
     },
     connection: unknown
   } ); // TODO:
-  join(password: string, replaceParticipant?: boolean): void;
+  join(password?: string, replaceParticipant?: boolean): void;
   authenticateAndUpgradeRole: ( options: unknown ) => Promise<unknown>; // TODO:
   isJoined: () => boolean;
   isP2PEnabled: () => boolean;
